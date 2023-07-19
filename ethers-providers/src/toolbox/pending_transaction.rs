@@ -39,7 +39,7 @@ pub struct PendingTransaction<'a, P> {
     tx_hash: TxHash,
     confirmations: usize,
     provider: &'a Provider<P>,
-    state: PendingTxState<'a>,
+    pub state: PendingTxState<'a>,
     interval: Box<dyn Stream<Item = ()> + Send + Unpin>,
     retries_remaining: usize,
 }
@@ -322,7 +322,7 @@ impl<'a, P> Deref for PendingTransaction<'a, P> {
 }
 
 // We box the TransactionReceipts to keep the enum small.
-enum PendingTxState<'a> {
+pub enum PendingTxState<'a> {
     /// Initial delay to ensure the GettingTx loop doesn't immediately fail
     InitialDelay(Pin<Box<Delay>>),
 

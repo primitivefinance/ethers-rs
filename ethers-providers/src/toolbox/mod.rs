@@ -1,5 +1,6 @@
 mod pending_transaction;
 pub use pending_transaction::PendingTransaction;
+pub use pending_transaction::PendingTxState;
 
 mod pending_escalator;
 pub use pending_escalator::EscalatingPending;
