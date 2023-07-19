@@ -1,4 +1,4 @@
-mod pending_transaction;
+pub mod pending_transaction;
 pub use pending_transaction::PendingTransaction;
 pub use pending_transaction::PendingTxState;
 
