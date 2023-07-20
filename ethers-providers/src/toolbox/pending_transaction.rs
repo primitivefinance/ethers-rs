@@ -282,6 +282,11 @@ impl<'a, P: JsonRpcClient> Future for PendingTransaction<'a, P> {
             }
             PendingTxState::Completed => {
                 panic!("polled pending transaction future after completion")
+            },
+            PendingTxState::RevmReceipt(address) => {
+                let mut receipt = TransactionReceipt::default();
+                receipt.contract_address = Some(*address);
+                return Poll::Ready(Ok(Some(receipt)))
             }
         };
 
@@ -351,6 +356,9 @@ pub enum PendingTxState<'a> {
 
     /// Future has completed and should panic if polled again
     Completed,
+
+    /// Future is not necessary as it is a raw revm call (to be used by arbiter)
+    RevmReceipt(ethers_core::types::Address),
 }
 
 impl<'a> fmt::Debug for PendingTxState<'a> {
@@ -365,6 +373,7 @@ impl<'a> fmt::Debug for PendingTxState<'a> {
             PendingTxState::PausedGettingBlockNumber(_) => "PausedGettingBlockNumber",
             PendingTxState::CheckingReceipt(_) => "CheckingReceipt",
             PendingTxState::Completed => "Completed",
+            PendingTxState::RevmReceipt(_) => "RevmReceipt",
         };
 
         f.debug_struct("PendingTxState").field("state", &state).finish()
