@@ -357,8 +357,11 @@ pub enum PendingTxState<'a> {
     /// Future has completed and should panic if polled again
     Completed,
 
-    /// Future is not necessary as it is a raw revm call (to be used by arbiter)
-    RevmReceipt(ethers_core::types::Address),
+    /// Future is not necessary as it is a raw revm deploy (to be used by arbiter)
+    RevmDeployOutput(ethers_core::types::Address),
+
+    /// Future is not necessary as it is a raw revm transaction (to be used by arbiter)
+    RevmTransactOutput(ethers_core::types::Bytes),
 }
 
 impl<'a> fmt::Debug for PendingTxState<'a> {
@@ -373,7 +376,8 @@ impl<'a> fmt::Debug for PendingTxState<'a> {
             PendingTxState::PausedGettingBlockNumber(_) => "PausedGettingBlockNumber",
             PendingTxState::CheckingReceipt(_) => "CheckingReceipt",
             PendingTxState::Completed => "Completed",
-            PendingTxState::RevmReceipt(_) => "RevmReceipt",
+            PendingTxState::RevmDeployOutput(_) => "RevmDeployOutput",
+            PendingTxState::RevmTransactOutput(_) => "RevmTransactOutput",
         };
 
         f.debug_struct("PendingTxState").field("state", &state).finish()
