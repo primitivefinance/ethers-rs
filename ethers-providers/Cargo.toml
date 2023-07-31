@@ -23,6 +23,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 all-features = true
 
 [dependencies]
+
 ethers-core.workspace = true
 
 serde.workspace = true
