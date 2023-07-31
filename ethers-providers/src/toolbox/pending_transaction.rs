@@ -366,7 +366,7 @@ pub enum PendingTxState<'a> {
     RevmDeployOutput(ethers_core::types::Address),
 
     /// Future is not necessary as it is a raw revm transaction (to be used by arbiter)
-    RevmTransactOutput(Vec<ethers_core::types::Log>),
+    RevmTransactOutput(Vec<ethers_core::types::Log>, U256),
 }
 
 impl<'a> fmt::Debug for PendingTxState<'a> {
