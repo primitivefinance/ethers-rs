@@ -7,7 +7,7 @@ use futures_core::stream::Stream;
 use futures_timer::Delay;
 use futures_util::stream::StreamExt;
 use instant::Duration;
-use pin_project::pin_project; 
+use pin_project::pin_project;
 use std::{
     fmt,
     future::Future,
