@@ -288,8 +288,9 @@ impl<'a, P: JsonRpcClient> Future for PendingTransaction<'a, P> {
                 receipt.contract_address = Some(*address);
                 return Poll::Ready(Ok(Some(receipt)))
             },
-            PendingTxState::RevmTransactOutput(logs) => {
+            PendingTxState::RevmTransactOutput(logs, block) => {
                 let mut receipt = TransactionReceipt::default();
+                receipt.block_number = Some(*block);
                 receipt.logs = logs.clone();
                 return Poll::Ready(Ok(Some(receipt)))
             }
@@ -366,7 +367,7 @@ pub enum PendingTxState<'a> {
     RevmDeployOutput(ethers_core::types::Address),
 
     /// Future is not necessary as it is a raw revm transaction (to be used by arbiter)
-    RevmTransactOutput(Vec<ethers_core::types::Log>),
+    RevmTransactOutput(Vec<ethers_core::types::Log>, U64),
 }
 
 impl<'a> fmt::Debug for PendingTxState<'a> {
@@ -382,7 +383,7 @@ impl<'a> fmt::Debug for PendingTxState<'a> {
             PendingTxState::CheckingReceipt(_) => "CheckingReceipt",
             PendingTxState::Completed => "Completed",
             PendingTxState::RevmDeployOutput(_) => "RevmDeployOutput",
-            PendingTxState::RevmTransactOutput(_) => "RevmTransactOutput",
+            PendingTxState::RevmTransactOutput(_, _) => "RevmTransactOutput",
         };
 
         f.debug_struct("PendingTxState").field("state", &state).finish()
